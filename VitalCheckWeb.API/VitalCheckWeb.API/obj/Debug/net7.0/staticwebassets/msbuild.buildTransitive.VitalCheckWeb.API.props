@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\VitalCheckWeb.API.props" />
+</Project>
