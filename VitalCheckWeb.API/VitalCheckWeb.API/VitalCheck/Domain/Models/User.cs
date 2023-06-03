@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace VitalCheckWeb.API.VitalCheck.Domain.Models;
 
 public class User
@@ -14,7 +16,16 @@ public class User
     public int UserPlanID { get; set; }
     public UserPlan UserPlan { get; set; }
     
+    public int UserTypeID { get; set; }
+    public UserType UserType { get; set; }
+    
+    public IList<Sale> Sales { get; set; } = new List<Sale>();
+
     public IList<Inventory> Inventories { get; set; } = new List<Inventory>();
-    public IList<Provider> Providers { get; set; } = new List<Provider>();
-    public IList<Company> Companies { get; set; } = new List<Company>();
+    
+    [InverseProperty("User1")]
+    public IList<Dispatch> Dispatches1 { get; set; } = new List<Dispatch>();
+
+    [InverseProperty("User2")]
+    public IList<Dispatch> Dispatches2 { get; set; } = new List<Dispatch>();
 }
