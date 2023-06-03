@@ -8,17 +8,14 @@ namespace VitalCheckWeb.API.VitalCheck.Services;
 public class DispatchService : IDispatchService
     {
         private readonly IDispatchRepository _dispatchRepository;
-        private readonly ICompanyRepository _companyRepository;
-        private readonly IProviderRepository _providerRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IMedicineRepository _medicineRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public DispatchService(IDispatchRepository dispatchRepository, ICompanyRepository companyRepository,
-            IProviderRepository providerRepository, IMedicineRepository medicineRepository, IUnitOfWork unitOfWork)
+        public DispatchService(IDispatchRepository dispatchRepository, IUserRepository userRepository, IMedicineRepository medicineRepository, IUnitOfWork unitOfWork)
         {
             _dispatchRepository = dispatchRepository;
-            _companyRepository = companyRepository;
-            _providerRepository = providerRepository;
+            _userRepository = userRepository;
             _medicineRepository = medicineRepository;
             _unitOfWork = unitOfWork;
         }
@@ -28,14 +25,14 @@ public class DispatchService : IDispatchService
             return await _dispatchRepository.ListAsync();
         }
 
-        public async Task<IEnumerable<Dispatch>> ListByCompanyIdAsync(int companyId)
+        public async Task<IEnumerable<Dispatch>> ListByUser1IdAsync(int user1Id)
         {
-            return await _dispatchRepository.ListByCompanyIdAsync(companyId);
+            return await _dispatchRepository.ListByUser1IdAsync(user1Id);
         }
 
-        public async Task<IEnumerable<Dispatch>> ListByProviderIdAsync(int providerId)
+        public async Task<IEnumerable<Dispatch>> ListByUser2IdAsync(int user2Id)
         {
-            return await _dispatchRepository.ListByProviderIdAsync(providerId);
+            return await _dispatchRepository.ListByUser2IdAsync(user2Id);
         }
 
         public async Task<IEnumerable<Dispatch>> ListByMedicineIdAsync(int medicineId)
@@ -47,16 +44,16 @@ public class DispatchService : IDispatchService
         {
             try
             {
-                var existingCompany = await _companyRepository.FindByIdAsync(dispatch.CompanyID);
+                var existingCompany = await _userRepository.FindByIdAsync(dispatch.User1ID);
                 if (existingCompany == null)
                 {
-                    return new DispatchResponse("Company not found.");
+                    return new DispatchResponse("User 1 not found.");
                 }
 
-                var existingProvider = await _providerRepository.FindByIdAsync(dispatch.ProviderID);
+                var existingProvider = await _userRepository.FindByIdAsync(dispatch.User2ID);
                 if (existingProvider == null)
                 {
-                    return new DispatchResponse("Provider not found.");
+                    return new DispatchResponse("User 2 not found.");
                 }
 
                 var existingMedicine = await _medicineRepository.FindByIdAsync(dispatch.MedicineID);
@@ -90,6 +87,9 @@ public class DispatchService : IDispatchService
             existingDispatch.Description = dispatch.Description;
             existingDispatch.EntryDate = dispatch.EntryDate;
             existingDispatch.ExpiryDate = dispatch.ExpiryDate;
+            existingDispatch.User1ID = dispatch.User1ID;
+            existingDispatch.User2ID = dispatch.User2ID;
+            existingDispatch.MedicineID = dispatch.MedicineID;
             
             try
             {

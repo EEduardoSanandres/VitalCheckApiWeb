@@ -9,11 +9,17 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
+    
+    private readonly IUserPlanRepository _userPlanRepository;
+    private readonly IUserTypeRepository _userTypeRepository;
 
-    public UserService(IUserRepository userRepository, IUnitOfWork unitOfWork)
+
+    public UserService(IUserRepository userRepository, IUnitOfWork unitOfWork, IUserPlanRepository userPlanRepository, IUserTypeRepository userTypeRepository)
     {
         _userRepository = userRepository;
         _unitOfWork = unitOfWork;
+        _userPlanRepository = userPlanRepository;
+        _userTypeRepository = userTypeRepository;
     }
 
     public async Task<IEnumerable<User>> ListAsync()
@@ -29,6 +35,13 @@ public class UserService : IUserService
     {
         try
         {
+            var userPlan = await _userPlanRepository.FindByIdAsync(user.UserPlanID);
+            var userType = await _userTypeRepository.FindByIdAsync(user.UserTypeID);
+            
+            // Asignar el plan de usuario y tipo de usuario al usuario
+            user.UserPlan = userPlan;
+            user.UserType = userType;
+            
             await _userRepository.AddAsync(user);
             await _unitOfWork.CompleteAsync();
             return new UserResponse(user);
@@ -51,12 +64,14 @@ public class UserService : IUserService
         existingUser.RUC = user.RUC;
         existingUser.RegistrationDate = user.RegistrationDate;
         existingUser.UserPlanID = user.UserPlanID;
+        existingUser.UserTypeID = user.UserTypeID;
 
         try
         {
             _userRepository.Update(existingUser);
             await _unitOfWork.CompleteAsync();
-            return new UserResponse(existingUser);
+            var updatedUser = await _userRepository.FindByIdAsync(userId); // Obtén la versión actualizada del usuario
+            return new UserResponse(updatedUser);
         }
         catch (Exception e)
         {
@@ -72,9 +87,10 @@ public class UserService : IUserService
 
         try
         {
+            var deletedUser = existingUser; // Guarda una referencia al usuario eliminado
             _userRepository.Remove(existingUser);
             await _unitOfWork.CompleteAsync();
-            return new UserResponse(existingUser);
+            return new UserResponse(deletedUser);
         }
         catch (Exception e)
         {

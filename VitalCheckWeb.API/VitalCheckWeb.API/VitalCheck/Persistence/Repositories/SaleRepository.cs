@@ -17,34 +17,37 @@ public class SaleRepository : ISaleRepository
     public async Task<IEnumerable<Sale>> ListAsync()
     {
         return await _context.Sales
-            .Include(s => s.Company)
-            .ThenInclude(c => c.User)
+            .Include(s => s.User)
             .ThenInclude(u => u.UserPlan)
+            .Include(s => s.User)
+            .ThenInclude(u => u.UserType)
             .Include(s => s.Client)
             .Include(s => s.Medicine)
             .ThenInclude(m => m.MedicineType)
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Sale>> ListByCompanyIdAsync(int companyId)
+    public async Task<IEnumerable<Sale>> ListByUserIdAsync(int userId)
     {
         return await _context.Sales
-            .Include(s => s.Company)
-            .ThenInclude(c => c.User)
+            .Include(s => s.User)
             .ThenInclude(u => u.UserPlan)
+            .Include(s => s.User)
+            .ThenInclude(u => u.UserType)
             .Include(s => s.Client)
             .Include(s => s.Medicine)
             .ThenInclude(m => m.MedicineType)
-            .Where(s => s.CompanyID == companyId)
+            .Where(s => s.UserID == userId)
             .ToListAsync();
     }
 
     public async Task<IEnumerable<Sale>> ListByClientIdAsync(int clientId)
     {
         return await _context.Sales
-            .Include(s => s.Company)
-            .ThenInclude(c => c.User)
+            .Include(s => s.User)
             .ThenInclude(u => u.UserPlan)
+            .Include(s => s.User)
+            .ThenInclude(u => u.UserType)
             .Include(s => s.Client)
             .Include(s => s.Medicine)
             .ThenInclude(m => m.MedicineType)
@@ -55,9 +58,10 @@ public class SaleRepository : ISaleRepository
     public async Task<IEnumerable<Sale>> ListByMedicineIdAsync(int medicineId)
     {
         return await _context.Sales
-            .Include(s => s.Company)
-            .ThenInclude(c => c.User)
+            .Include(s => s.User)
             .ThenInclude(u => u.UserPlan)
+            .Include(s => s.User)
+            .ThenInclude(u => u.UserType)
             .Include(s => s.Client)
             .Include(s => s.Medicine)
             .ThenInclude(m => m.MedicineType)
@@ -73,9 +77,10 @@ public class SaleRepository : ISaleRepository
     public async Task<Sale> FindByIdAsync(int saleId)
     {
         return await _context.Sales
-            .Include(s => s.Company)
-            .ThenInclude(c => c.User)
+            .Include(s => s.User)
             .ThenInclude(u => u.UserPlan)
+            .Include(s => s.User)
+            .ThenInclude(u => u.UserType)
             .Include(s => s.Client)
             .Include(s => s.Medicine)
             .ThenInclude(m => m.MedicineType)

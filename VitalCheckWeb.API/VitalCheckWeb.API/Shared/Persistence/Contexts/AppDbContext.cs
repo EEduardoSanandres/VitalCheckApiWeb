@@ -7,15 +7,14 @@ namespace VitalCheckWeb.API.Shared.Persistence.Contexts;
 public class AppDbContext : DbContext
 {
     public DbSet<Client> Clients { get; set; }
-    public DbSet<Company> Companies { get; set; }
     public DbSet<Dispatch> Dispatches { get; set; }
     public DbSet<Inventory> Inventories { get; set; }
     public DbSet<Medicine> Medicines { get; set; }
     public DbSet<MedicineType> MedicineTypes { get; set; }
-    public DbSet<Provider> Providers { get; set; }
     public DbSet<Sale> Sales { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<UserPlan> UserPlans { get; set; }
+    public DbSet<UserType> UserTypes { get; set; }
     
     public AppDbContext(DbContextOptions options) : base(options)
     {
@@ -39,21 +38,6 @@ public class AppDbContext : DbContext
             .WithOne(p => p.Client)
             .HasForeignKey(p => p.ClientID);
 
-        builder.Entity<Company>().ToTable("Companies");
-        builder.Entity<Company>().HasKey(p => p.CompanyID);
-        builder.Entity<Company>().Property(p => p.CompanyID).IsRequired().ValueGeneratedOnAdd();
-
-        // Relationships
-        builder.Entity<Company>()
-            .HasMany(p => p.Dispatches)
-            .WithOne(p => p.Company)
-            .HasForeignKey(p => p.CompanyID);
-
-        builder.Entity<Company>()
-            .HasMany(p => p.Sales)
-            .WithOne(p => p.Company)
-            .HasForeignKey(p => p.CompanyID);
-
         builder.Entity<Dispatch>().ToTable("Dispatches");
         builder.Entity<Dispatch>().HasKey(p => p.DispatchID);
         builder.Entity<Dispatch>().Property(p => p.DispatchID).IsRequired().ValueGeneratedOnAdd();
@@ -61,6 +45,19 @@ public class AppDbContext : DbContext
         builder.Entity<Dispatch>().Property(p => p.Description).HasMaxLength(255);
         builder.Entity<Dispatch>().Property(p => p.EntryDate).IsRequired();
         builder.Entity<Dispatch>().Property(p => p.ExpiryDate).IsRequired();
+
+        // Relationships
+        builder.Entity<Dispatch>()
+            .HasOne(d => d.User1)
+            .WithMany(u => u.Dispatches1)
+            .HasForeignKey(d => d.User1ID)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Dispatch>()
+            .HasOne(d => d.User2)
+            .WithMany(u => u.Dispatches2)
+            .HasForeignKey(d => d.User2ID)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.Entity<Inventory>().ToTable("Inventories");
         builder.Entity<Inventory>().HasKey(p => p.InventoryID);
@@ -113,16 +110,18 @@ public class AppDbContext : DbContext
             .WithOne(p => p.UserPlan)
             .HasForeignKey(p => p.UserPlanID);
         
-        builder.Entity<Provider>().ToTable("Providers");
-        builder.Entity<Provider>().HasKey(p => p.ProviderID);
-        builder.Entity<Provider>().Property(p => p.ProviderID).IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<UserType>().ToTable("UserTypes");
+        builder.Entity<UserType>().HasKey(t => t.UserTypeID);
+        builder.Entity<UserType>().Property(t => t.UserTypeID).IsRequired().ValueGeneratedOnAdd();
+        builder.Entity<UserType>().Property(t => t.TypeName).IsRequired().HasMaxLength(255);
 
         // Relationships
-        builder.Entity<Provider>()
-            .HasMany(p => p.Dispatches)
-            .WithOne(p => p.Provider)
-            .HasForeignKey(p => p.ProviderID);
-        
+        builder.Entity<UserType>()
+            .HasMany(t => t.Users)
+            .WithOne(t => t.UserType)
+            .HasForeignKey(t => t.UserTypeID);
+
+        // Relationships
         builder.Entity<Sale>().ToTable("Sales");
         builder.Entity<Sale>().HasKey(p => p.SaleID);
         builder.Entity<Sale>().Property(p => p.SaleID).IsRequired().ValueGeneratedOnAdd();
@@ -144,17 +143,12 @@ public class AppDbContext : DbContext
             .HasMany(p => p.Inventories)
             .WithOne(p => p.User)
             .HasForeignKey(p => p.UserID);
-
-        builder.Entity<User>()
-            .HasMany(p => p.Providers)
-            .WithOne(p => p.User)
-            .HasForeignKey(p => p.UserID);
-
-        builder.Entity<User>()
-            .HasMany(p => p.Companies)
-            .WithOne(p => p.User)
-            .HasForeignKey(p => p.UserID);
         
+        builder.Entity<User>()
+            .HasMany(p => p.Sales)
+            .WithOne(p => p.User)
+            .HasForeignKey(p => p.UserID);
+
         builder.UseSnakeCaseNamingConvention();
     }
     

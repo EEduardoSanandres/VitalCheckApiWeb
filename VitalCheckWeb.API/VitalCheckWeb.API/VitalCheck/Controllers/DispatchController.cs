@@ -27,18 +27,18 @@ public class DispatchController : ControllerBase
             return resources;
         }
 
-        [HttpGet("company/{companyId}")]
-        public async Task<IEnumerable<DispatchResource>> GetByCompanyIdAsync(int companyId)
+        [HttpGet("company/{user1Id}")]
+        public async Task<IEnumerable<DispatchResource>> GetByUser1IdAsync(int user1Id)
         {
-            var dispatches = await _dispatchService.ListByCompanyIdAsync(companyId);
+            var dispatches = await _dispatchService.ListByUser1IdAsync(user1Id);
             var resources = _mapper.Map<IEnumerable<Dispatch>, IEnumerable<DispatchResource>>(dispatches);
             return resources;
         }
 
-        [HttpGet("provider/{providerId}")]
-        public async Task<IEnumerable<DispatchResource>> GetByProviderIdAsync(int providerId)
+        [HttpGet("provider/{user2Id}")]
+        public async Task<IEnumerable<DispatchResource>> GetByUser2IdAsync(int user2Id)
         {
-            var dispatches = await _dispatchService.ListByProviderIdAsync(providerId);
+            var dispatches = await _dispatchService.ListByUser2IdAsync(user2Id);
             var resources = _mapper.Map<IEnumerable<Dispatch>, IEnumerable<DispatchResource>>(dispatches);
             return resources;
         }

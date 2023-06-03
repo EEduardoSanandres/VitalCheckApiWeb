@@ -8,20 +8,20 @@ namespace VitalCheckWeb.API.VitalCheck.Services;
 public class SaleService : ISaleService
 {
     private readonly ISaleRepository _saleRepository;
-    private readonly ICompanyRepository _companyRepository;
+    private readonly IUserRepository _userRepository;
     private readonly IClientRepository _clientRepository;
     private readonly IMedicineRepository _medicineRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public SaleService(
         ISaleRepository saleRepository,
-        ICompanyRepository companyRepository,
+        IUserRepository userRepository,
         IClientRepository clientRepository,
         IMedicineRepository medicineRepository,
         IUnitOfWork unitOfWork)
     {
         _saleRepository = saleRepository;
-        _companyRepository = companyRepository;
+        _userRepository = userRepository;
         _clientRepository = clientRepository;
         _medicineRepository = medicineRepository;
         _unitOfWork = unitOfWork;
@@ -32,9 +32,9 @@ public class SaleService : ISaleService
         return await _saleRepository.ListAsync();
     }
 
-    public async Task<IEnumerable<Sale>> ListByCompanyIdAsync(int companyId)
+    public async Task<IEnumerable<Sale>> ListByUserIdAsync(int userId)
     {
-        return await _saleRepository.ListByCompanyIdAsync(companyId);
+        return await _saleRepository.ListByUserIdAsync(userId);
     }
 
     public async Task<IEnumerable<Sale>> ListByClientIdAsync(int clientId)
@@ -51,10 +51,10 @@ public class SaleService : ISaleService
     {
         try
         {
-            var existingCompany = await _companyRepository.FindByIdAsync(sale.CompanyID);
+            var existingCompany = await _userRepository.FindByIdAsync(sale.UserID);
             if (existingCompany == null)
             {
-                return new SaleResponse("Company not found.");
+                return new SaleResponse("User not found.");
             }
 
             var existingClient = await _clientRepository.FindByIdAsync(sale.ClientID);
@@ -90,7 +90,7 @@ public class SaleService : ISaleService
         existingSale.Quantity = sale.Quantity;
         existingSale.TotalPrice = sale.TotalPrice;
         existingSale.Date = sale.Date;
-        existingSale.CompanyID = sale.CompanyID;
+        existingSale.UserID = sale.UserID;
         existingSale.ClientID = sale.ClientID;
         existingSale.MedicineID = sale.MedicineID;
 

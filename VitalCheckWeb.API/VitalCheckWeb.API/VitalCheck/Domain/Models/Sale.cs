@@ -8,8 +8,8 @@ public class Sale
     public DateTime Date { get; set; }
 
     // Relationships
-    public int CompanyID { get; set; }
-    public Company Company { get; set; }
+    public int UserID { get; set; }
+    public User User { get; set; }
     
     public int ClientID { get; set; }
     public Client Client { get; set; }

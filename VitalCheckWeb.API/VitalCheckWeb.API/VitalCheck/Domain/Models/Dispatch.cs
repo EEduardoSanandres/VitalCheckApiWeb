@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace VitalCheckWeb.API.VitalCheck.Domain.Models;
 
 public class Dispatch
@@ -9,12 +11,13 @@ public class Dispatch
     public DateTime ExpiryDate { get; set; }
 
     // Relationships
-    public int CompanyID { get; set; }
-    public Company Company { get; set; }
     
-    public int ProviderID { get; set; }
-    public Provider Provider { get; set; }
-    
+    public int User1ID { get; set; }
+    [ForeignKey("User1ID")]
+    public User User1 { get; set; }
+    [ForeignKey("User2ID")]
+    public int User2ID { get; set; }
+    public User User2 { get; set; }
     public int MedicineID { get; set; }
     public Medicine Medicine { get; set; }
 }

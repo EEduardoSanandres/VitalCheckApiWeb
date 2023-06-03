@@ -37,10 +37,6 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IClientService, ClientService>();
 
-builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
-builder.Services.AddScoped<ICompanyService, CompanyService>();
-
-
 builder.Services.AddScoped<IDispatchRepository, DispatchRepository>();
 builder.Services.AddScoped<IDispatchService, DispatchService>();
 
@@ -53,9 +49,6 @@ builder.Services.AddScoped<IMedicineService, MedicineService>();
 builder.Services.AddScoped<IMedicineTypeRepository, MedicineTypeRepository>();
 builder.Services.AddScoped<IMedicineTypeService, MedicineTypeService>();
 
-builder.Services.AddScoped<IProviderRepository, ProviderRepository>();
-builder.Services.AddScoped<IProviderService, ProviderService>();
-
 builder.Services.AddScoped<ISaleRepository, SaleRepository>();
 builder.Services.AddScoped<ISaleService, SaleService>();
 
@@ -64,6 +57,9 @@ builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddScoped<IUserPlanRepository, UserPlanRepository>();
 builder.Services.AddScoped<IUserPlanService, UserPlanService>();
+
+builder.Services.AddScoped<IUserTypeRepository, UserTypeRepository>();
+builder.Services.AddScoped<IUserTypeService, UserTypeService>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 

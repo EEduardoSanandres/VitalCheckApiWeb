@@ -8,4 +8,5 @@ public class SaveUserResource
     public long RUC { get; set; }
     public DateTime RegistrationDate { get; set; }
     public int UserPlanID { get; set; }
+    public int UserTypeID { get; set; }
 }

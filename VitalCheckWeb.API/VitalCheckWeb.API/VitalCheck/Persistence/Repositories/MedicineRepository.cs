@@ -32,6 +32,7 @@ public class MedicineRepository : IMedicineRepository
     public async Task AddAsync(Medicine medicine)
     {
         await _context.Medicines.AddAsync(medicine);
+        await _context.SaveChangesAsync();
     }
 
     public async Task<Medicine> FindByIdAsync(int medicineId)

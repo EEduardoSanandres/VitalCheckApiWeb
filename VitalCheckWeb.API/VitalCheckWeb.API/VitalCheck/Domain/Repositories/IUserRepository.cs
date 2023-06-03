@@ -8,6 +8,7 @@ public interface IUserRepository
     Task AddAsync(User user);
     Task<User> FindByIdAsync(int userId);
     Task<IEnumerable<User>> ListByUserPlanIdAsync(int userPlanId);
+    Task<IEnumerable<User>> ListByUserTypeIdAsync(int userTypeId);
     void Update(User user);
     void Remove(User user);
 }

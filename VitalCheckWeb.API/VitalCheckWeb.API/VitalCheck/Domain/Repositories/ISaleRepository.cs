@@ -5,7 +5,7 @@ namespace VitalCheckWeb.API.VitalCheck.Domain.Repositories;
 public interface ISaleRepository
 {
     Task<IEnumerable<Sale>> ListAsync();
-    Task<IEnumerable<Sale>> ListByCompanyIdAsync(int companyId);
+    Task<IEnumerable<Sale>> ListByUserIdAsync(int userId);
     Task<IEnumerable<Sale>> ListByClientIdAsync(int clientId);
     Task<IEnumerable<Sale>> ListByMedicineIdAsync(int medicineId);
     Task AddAsync(Sale sale);

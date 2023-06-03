@@ -27,10 +27,10 @@ public class SalesController : ControllerBase
         return resources;
     }
 
-    [HttpGet("company/{companyId}")]
-    public async Task<IEnumerable<SaleResource>> GetByCompanyIdAsync(int companyId)
+    [HttpGet("company/{userId}")]
+    public async Task<IEnumerable<SaleResource>> GetByCompanyIdAsync(int userId)
     {
-        var sales = await _saleService.ListByCompanyIdAsync(companyId);
+        var sales = await _saleService.ListByUserIdAsync(userId);
         var resources = _mapper.Map<IEnumerable<Sale>, IEnumerable<SaleResource>>(sales);
         return resources;
     }

@@ -9,11 +9,14 @@ public class MedicineService : IMedicineService
 {
     private readonly IMedicineRepository _medicineRepository;
     private readonly IUnitOfWork _unitOfWork;
+    
+    private readonly IMedicineTypeRepository _medicineTypeRepository;
 
-    public MedicineService(IMedicineRepository medicineRepository, IUnitOfWork unitOfWork)
+    public MedicineService(IMedicineRepository medicineRepository, IUnitOfWork unitOfWork, IMedicineTypeRepository medicineTypeRepository)
     {
         _medicineRepository = medicineRepository;
         _unitOfWork = unitOfWork;
+        _medicineTypeRepository = medicineTypeRepository;
     }
 
     public async Task<IEnumerable<Medicine>> ListAsync()
@@ -30,6 +33,11 @@ public class MedicineService : IMedicineService
     {
         try
         {
+            var medicneType = await _medicineTypeRepository.FindByIdAsync(medicine.MedicineTypeID);
+            
+            // Asignar el plan de usuario y tipo de usuario al usuario
+            medicine.MedicineType = medicneType;
+            
             await _medicineRepository.AddAsync(medicine);
             await _unitOfWork.CompleteAsync();
             return new MedicineResponse(medicine);
@@ -49,12 +57,14 @@ public class MedicineService : IMedicineService
         existingMedicine.CommercialName = medicine.CommercialName;
         existingMedicine.GenericName = medicine.GenericName;
         existingMedicine.CostPrice = medicine.CostPrice;
+        existingMedicine.MedicineTypeID = medicine.MedicineTypeID;
 
         try
         {
             _medicineRepository.Update(existingMedicine);
             await _unitOfWork.CompleteAsync();
-            return new MedicineResponse(existingMedicine);
+            var updatedMedicine = await _medicineRepository.FindByIdAsync(medicineId); // Obtén la versión actualizada del usuario
+            return new MedicineResponse(updatedMedicine);
         }
         catch (Exception e)
         {
@@ -70,9 +80,10 @@ public class MedicineService : IMedicineService
 
         try
         {
+            var deletedMedicine = existingMedicine;
             _medicineRepository.Remove(existingMedicine);
             await _unitOfWork.CompleteAsync();
-            return new MedicineResponse(existingMedicine);
+            return new MedicineResponse(deletedMedicine);
         }
         catch (Exception e)
         {

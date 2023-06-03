@@ -9,4 +9,5 @@ public class UserResource
     public long RUC { get; set; }
     public DateTime RegistrationDate { get; set; }
     public UserPlanResource UserPlan { get; set; }
+    public UserTypeResource UserType { get; set; }
 }

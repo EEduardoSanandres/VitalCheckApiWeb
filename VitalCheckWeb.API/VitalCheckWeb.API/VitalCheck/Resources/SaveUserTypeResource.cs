@@ -2,5 +2,5 @@
 
 public class SaveUserTypeResource
 {
-    
+    public string TypeName { get; set; }
 }

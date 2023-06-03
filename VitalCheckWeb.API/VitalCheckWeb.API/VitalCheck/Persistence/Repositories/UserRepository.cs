@@ -17,6 +17,7 @@ public class UserRepository : IUserRepository
     {
         return await _context.Users
             .Include(u => u.UserPlan)
+            .Include(u => u.UserType)
             .ToListAsync();
     }
 
@@ -24,18 +25,29 @@ public class UserRepository : IUserRepository
     {
         return await _context.Users
             .Include(u => u.UserPlan)
+            .Include(u => u.UserType)
             .Where(u => u.UserPlanID == userPlanId)
+            .ToListAsync();
+    }
+    public async Task<IEnumerable<User>> ListByUserTypeIdAsync(int userTypeId)
+    {
+        return await _context.Users
+            .Include(u => u.UserPlan)
+            .Include(u => u.UserType)
+            .Where(u => u.UserTypeID == userTypeId)
             .ToListAsync();
     }
     public async Task AddAsync(User user)
     {
         await _context.Users.AddAsync(user);
+        await _context.SaveChangesAsync();
     }
 
     public async Task<User> FindByIdAsync(int userId)
     {
         return await _context.Users
             .Include(u => u.UserPlan)
+            .Include(u => u.UserType)
             .FirstOrDefaultAsync(u => u.UserID == userId);
     }
 
