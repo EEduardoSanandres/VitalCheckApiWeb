@@ -69,6 +69,17 @@ builder.Services.AddAutoMapper(
  typeof(ModelToResourceProfile),
  typeof(ResourceToModelProfile));
 
+builder.Services.AddControllers();
+builder.Services.AddCors(options =>
+{
+ options.AddPolicy("MyPolicy", builder =>
+ {
+  builder.WithOrigins("http://localhost:5173")
+   .AllowAnyHeader()
+   .AllowAnyMethod();
+ });
+});
+
 var app = builder.Build();
 
 // Validation for ensuring Database Objects are created
@@ -86,6 +97,8 @@ if (app.Environment.IsDevelopment())
  app.UseSwagger();
  app.UseSwaggerUI();
 }
+
+app.UseCors("MyPolicy");
 
 app.UseHttpsRedirection();
 
