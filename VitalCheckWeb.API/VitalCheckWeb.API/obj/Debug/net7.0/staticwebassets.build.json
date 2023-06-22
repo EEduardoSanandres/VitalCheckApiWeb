@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "grVB2GWisC2DkbN09O42inDGC7YhQJeiCMT9eIU+zP4=",
+  "Source": "VitalCheckWeb.API",
+  "BasePath": "_content/VitalCheckWeb.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
